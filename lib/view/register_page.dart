@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/view/login_page.dart';
+import 'package:latihan_soal_app/view/main_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -43,102 +45,169 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const InputRegisterTextfield(
-              hintText: "example@gmail.com",
-              title: "Email",
-            ),
-            const InputRegisterTextfield(
-              hintText: "contoh : John Doe",
-              title: "Nama Lengkap",
-            ),
-            const Text(
-              "Jenis Kelamin",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: ButtonLogin(
+            onTap: () {
+              Navigator.of(context).pushNamed(MainPage.route);
+            },
+            backgroundColor: R.colors.primary,
+            borderColor: R.colors.primary,
+            child: Text(
+              R.strings.daftar,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        primary: gender == "Laki-laki"
-                            ? R.colors.primary
-                            : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(
-                            width: 1,
-                            color: R.colors.borderGrey,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const InputRegisterTextfield(
+                hintText: "example@gmail.com",
+                title: "Email",
+              ),
+              const InputRegisterTextfield(
+                hintText: "contoh : John Doe",
+                title: "Nama Lengkap",
+              ),
+              const Text(
+                "Jenis Kelamin",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: gender == "Laki-laki"
+                              ? R.colors.primary
+                              : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              width: 1,
+                              color: R.colors.borderGrey,
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () {
-                        onTapGender(Gender.lakilaki);
-                      },
-                      child: Text(
-                        "Laki-laki",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: gender == "Laki-laki"
-                              ? Colors.white
-                              : R.colors.textColor,
+                        onPressed: () {
+                          onTapGender(Gender.lakilaki);
+                        },
+                        child: Text(
+                          "Laki-laki",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: gender == "Laki-laki"
+                                ? Colors.white
+                                : R.colors.textColor,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        primary: gender == "Perempuan"
-                            ? R.colors.primary
-                            : Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(
-                            width: 1,
-                            color: R.colors.borderGrey,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: gender == "Perempuan"
+                              ? R.colors.primary
+                              : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              width: 1,
+                              color: R.colors.borderGrey,
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () {
-                        onTapGender(Gender.perempuan);
-                      },
-                      child: Text(
-                        "Perempuan",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: gender == "Perempuan"
-                              ? Colors.white
-                              : R.colors.textColor,
+                        onPressed: () {
+                          onTapGender(Gender.perempuan);
+                        },
+                        child: Text(
+                          "Perempuan",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: gender == "Perempuan"
+                                ? Colors.white
+                                : R.colors.textColor,
+                          ),
                         ),
                       ),
                     ),
                   ),
+                ],
+              ),
+              const Text(
+                "Kelas",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
-            const InputRegisterTextfield(
-              hintText: "nama sekolah",
-              title: "Nama Sekolah",
-            )
-          ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: R.colors.borderGrey,
+                  ),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selectedKelas,
+                    items: kelas
+                        .map(
+                          (e) => DropdownMenuItem<String>(
+                            value: e,
+                            child: Text(
+                              e,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (String? val) {
+                      selectedKelas = val!;
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const InputRegisterTextfield(
+                hintText: "nama sekolah",
+                title: "Nama Sekolah",
+              ),
+              // const Spacer(),
+            ],
+          ),
         ),
       ),
     );
@@ -172,11 +241,12 @@ class InputRegisterTextfield extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
-              border: Border.all(
-                color: R.colors.borderGrey,
-              )),
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+            border: Border.all(
+              color: R.colors.borderGrey,
+            ),
+          ),
           child: TextField(
             decoration: InputDecoration(
                 border: InputBorder.none,
