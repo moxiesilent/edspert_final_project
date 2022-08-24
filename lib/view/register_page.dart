@@ -18,6 +18,10 @@ class _RegisterPageState extends State<RegisterPage> {
   List<String> kelas = ["10", "11", "12"];
   String selectedKelas = "10";
 
+  final emailController = TextEditingController();
+  final namaController = TextEditingController();
+  final sekolahController = TextEditingController();
+
   onTapGender(Gender g) {
     if (g == Gender.lakilaki) {
       gender = "Laki-laki";
@@ -50,7 +54,8 @@ class _RegisterPageState extends State<RegisterPage> {
           padding: const EdgeInsets.only(bottom: 20.0),
           child: ButtonLogin(
             onTap: () {
-              Navigator.of(context).pushNamed(MainPage.route);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(MainPage.route, (context) => false);
             },
             backgroundColor: R.colors.primary,
             borderColor: R.colors.primary,
@@ -72,11 +77,13 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const InputRegisterTextfield(
+              InputRegisterTextfield(
+                controller: emailController,
                 hintText: "example@gmail.com",
                 title: "Email",
               ),
-              const InputRegisterTextfield(
+              InputRegisterTextfield(
+                controller: namaController,
                 hintText: "contoh : John Doe",
                 title: "Nama Lengkap",
               ),
@@ -201,11 +208,11 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(
                 height: 5,
               ),
-              const InputRegisterTextfield(
+              InputRegisterTextfield(
+                controller: sekolahController,
                 hintText: "nama sekolah",
                 title: "Nama Sekolah",
               ),
-              // const Spacer(),
             ],
           ),
         ),
@@ -219,9 +226,11 @@ class InputRegisterTextfield extends StatelessWidget {
     Key? key,
     required this.title,
     required this.hintText,
+    this.controller,
   }) : super(key: key);
   final String title;
   final String hintText;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -248,6 +257,7 @@ class InputRegisterTextfield extends StatelessWidget {
             ),
           ),
           child: TextField(
+            controller: controller,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hintText,
