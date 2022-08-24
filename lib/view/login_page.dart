@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/view/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -53,6 +54,9 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const Spacer(),
             ButtonLogin(
+              onTap: (){
+                Navigator.of(context).pushNamed(RegisterPage.route);
+              },
               backgroundColor: Colors.white,
               borderColor: R.colors.primary,
               child: Row(
@@ -74,6 +78,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             ButtonLogin(
+              onTap: (){
+                Navigator.of(context).pushNamed(RegisterPage.route);
+              },
               backgroundColor: Colors.black,
               borderColor: R.colors.primary,
               child: Row(
@@ -107,11 +114,13 @@ class ButtonLogin extends StatelessWidget {
     required this.backgroundColor,
     required this.child,
     required this.borderColor,
+    required this.onTap,
   }) : super(key: key);
 
   final Color backgroundColor;
   final Widget child;
   final Color borderColor;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +141,7 @@ class ButtonLogin extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {},
+        onPressed: onTap,
         child: child,
       ),
     );

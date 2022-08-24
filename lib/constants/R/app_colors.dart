@@ -5,4 +5,7 @@ class AppColor{
   Color grey = const Color(0xffF3F7F8);
   Color subtitle = const Color(0xff6A7483);
   Color blackLogin = const Color(0xff1A1F26);
+  Color borderGrey = const Color(0xffD6D6D6);
+  Color hintTextColor = const Color(0xffAAAAAA);
+  Color textColor = const Color(0xff282828);
 }
