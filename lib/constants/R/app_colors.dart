@@ -8,4 +8,5 @@ class AppColor{
   Color borderGrey = const Color(0xffD6D6D6);
   Color hintTextColor = const Color(0xffAAAAAA);
   Color textColor = const Color(0xff282828);
+  Color disable = const Color(0xff8E8E8E);
 }
