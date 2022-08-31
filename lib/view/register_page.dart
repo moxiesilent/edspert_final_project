@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/helpers/user_email.dart';
+import 'package:latihan_soal_app/models/network_response.dart';
+import 'package:latihan_soal_app/models/user_by_email.dart';
+import 'package:latihan_soal_app/repository/auth_api.dart';
 import 'package:latihan_soal_app/view/login_page.dart';
 import 'package:latihan_soal_app/view/main_page.dart';
 
@@ -14,8 +18,8 @@ class RegisterPage extends StatefulWidget {
 enum Gender { lakilaki, perempuan }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String gender = "laki-laki";
   List<String> kelas = ["10", "11", "12"];
+  String gender = "laki-laki";
   String selectedKelas = "10";
 
   final emailController = TextEditingController();
@@ -29,6 +33,18 @@ class _RegisterPageState extends State<RegisterPage> {
       gender = "Perempuan";
     }
     setState(() {});
+  }
+
+  initDataUser() {
+    emailController.text = UserEmail.getUserEmail()!;
+    namaController.text = UserEmail.getUserDisplayName()!;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initDataUser();
   }
 
   @override
@@ -62,9 +78,36 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Padding(
           padding: const EdgeInsets.only(bottom: 20.0),
           child: ButtonLogin(
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(MainPage.route, (context) => false);
+            onTap: () async {
+              final json = {
+                "email": emailController.text,
+                "nama_lengkap": namaController.text,
+                "nama_sekolah": sekolahController.text,
+                "kelas": selectedKelas,
+                "gender": gender,
+                "foto": UserEmail.getUserPhotoUrl(),
+              };
+
+              final result = await AuthApi().postRegister(json);
+              if (result.status == Status.success) {
+                final registerResult = UsersByEmail.fromJson(result.data!);
+                if (registerResult.status == 1) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      MainPage.route, (context) => false);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(registerResult.message!),
+                    ),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Terjadi kesalahan silahkan ulangi kembali."),
+                  ),
+                );
+              }
             },
             backgroundColor: R.colors.primary,
             borderColor: R.colors.primary,
@@ -87,6 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InputRegisterTextfield(
+                enabled: false,
                 controller: emailController,
                 hintText: "example@gmail.com",
                 title: "Email",
@@ -236,10 +280,12 @@ class InputRegisterTextfield extends StatelessWidget {
     required this.title,
     required this.hintText,
     this.controller,
+    this.enabled = true,
   }) : super(key: key);
   final String title;
   final String hintText;
   final TextEditingController? controller;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -266,6 +312,7 @@ class InputRegisterTextfield extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: enabled,
             controller: controller,
             decoration: InputDecoration(
                 border: InputBorder.none,

@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/view/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -186,31 +189,41 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 13,
-                vertical: 18,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 7,
-                    color: Colors.black.withOpacity(0.25),
+            GestureDetector(
+              onTap: () async {
+                await GoogleSignIn().signOut();
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginPage.route,
+                  (route) => false,
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: 13,
+                  vertical: 18,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 7,
+                      color: Colors.black.withOpacity(0.25),
+                    ),
+                  ],
+                ),
+                child: const ListTile(
+                  title: Text(
+                    "Keluar",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
                   ),
-                ],
-              ),
-              child: const ListTile(
-                title: Text(
-                  "Keluar",
-                  style: TextStyle(
+                  leading: Icon(
+                    Icons.logout,
                     color: Colors.red,
                   ),
-                ),
-                leading: Icon(
-                  Icons.logout,
-                  color: Colors.red,
                 ),
               ),
             )

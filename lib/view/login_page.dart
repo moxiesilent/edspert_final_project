@@ -1,5 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/models/network_response.dart';
+import 'package:latihan_soal_app/repository/auth_api.dart';
+import 'package:latihan_soal_app/models/user_by_email.dart';
+import 'package:latihan_soal_app/view/main/latihan_soal/home_page.dart';
+import 'package:latihan_soal_app/view/main_page.dart';
 import 'package:latihan_soal_app/view/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,6 +18,29 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e, s) {
+      print(e);
+      print(s);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,8 +84,38 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const Spacer(),
             ButtonLogin(
-              onTap: (){
-                Navigator.of(context).pushNamed(RegisterPage.route);
+              onTap: () async {
+                print("masuk login");
+                try {
+                  await signInWithGoogle();
+                } catch (e, s) {
+                  print(e);
+                  print(s);
+                }
+
+                print("masuk login 2");
+
+                final user = FirebaseAuth.instance.currentUser;
+                print(user);
+                if (user != null) {
+                  final dataUser = await AuthApi().getUserByEmail();
+                  if (dataUser.status == Status.success) {
+                    final data = UsersByEmail.fromJson(dataUser.data!);
+                    if (data.status == 1) {
+                      Navigator.of(context).pushNamed(MainPage.route);
+                    } else {
+                      Navigator.of(context).pushNamed(RegisterPage.route);
+                    }
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Gagal Masuk"),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+                // Navigator.of(context).pushNamed(RegisterPage.route);
               },
               backgroundColor: Colors.white,
               borderColor: R.colors.primary,
@@ -78,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             ButtonLogin(
-              onTap: (){
+              onTap: () async {
                 Navigator.of(context).pushNamed(RegisterPage.route);
               },
               backgroundColor: Colors.black,

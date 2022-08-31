@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latihan_soal_app/constants/r.dart';
@@ -8,7 +9,9 @@ import 'package:latihan_soal_app/view/main_page.dart';
 import 'package:latihan_soal_app/view/register_page.dart';
 import 'package:latihan_soal_app/view/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -32,10 +35,10 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const SplashScreen(),
         LoginPage.route: (context) => const LoginPage(),
-        RegisterPage.route:(context) => const RegisterPage(),
-        MainPage.route:(context) => const MainPage(),
-        MapelPage.route:(context) => const MapelPage(),
-        PaketSoalPage.route:(context) => const PaketSoalPage(),
+        RegisterPage.route: (context) => const RegisterPage(),
+        MainPage.route: (context) => const MainPage(),
+        MapelPage.route: (context) => const MapelPage(),
+        PaketSoalPage.route: (context) => const PaketSoalPage(),
       },
     );
   }
