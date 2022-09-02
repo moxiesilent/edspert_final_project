@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/helpers/preference_helper.dart';
 import 'package:latihan_soal_app/models/network_response.dart';
 import 'package:latihan_soal_app/repository/auth_api.dart';
 import 'package:latihan_soal_app/models/user_by_email.dart';
@@ -102,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   if (dataUser.status == Status.success) {
                     final data = UsersByEmail.fromJson(dataUser.data!);
                     if (data.status == 1) {
+                      await PreferenceHelper().setUserData(data.data!);
                       Navigator.of(context).pushNamed(MainPage.route);
                     } else {
                       Navigator.of(context).pushNamed(RegisterPage.route);

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/models/banner_list.dart';
+import 'package:latihan_soal_app/models/mapel_list.dart';
+import 'package:latihan_soal_app/models/network_response.dart';
+import 'package:latihan_soal_app/repository/latihan_soal_api%20copy.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/mapel_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,6 +14,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  MapelList? mapelList;
+  BannerList? bannerList;
+
+  getMapel() async {
+    final mapelResult = await LatihanSoalApi().getMapel();
+    if (mapelResult.status == Status.success) {
+      mapelList = MapelList.fromJson(mapelResult.data!);
+      setState(() {});
+    }
+  }
+
+  getBanner() async {
+    final bannerResult = await LatihanSoalApi().getBanner();
+    if (bannerResult.status == Status.success) {
+      bannerList = BannerList.fromJson(bannerResult.data!);
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMapel();
+    getBanner();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               _buildUserHomeProfile(),
               _buildTopBanner(context),
-              _buildHomeListMapel(),
+              _buildHomeListMapel(mapelList),
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,21 +70,33 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 150,
-                      child: ListView.builder(
-                        itemCount: 5,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Image.asset(
-                              R.assets.imgBanner,
+                    bannerList == null
+                        ? Container(
+                            height: 70,
+                            width: double.infinity,
+                            child: const Center(
+                              child: CircularProgressIndicator(),
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          )
+                        : Container(
+                            height: 150,
+                            child: ListView.builder(
+                              itemCount: bannerList!.data!.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                final currentBanner = bannerList!.data![index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 20.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      currentBanner.eventImage!,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                     const SizedBox(
                       height: 35,
                     ),
@@ -68,7 +110,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container _buildHomeListMapel() {
+  Container _buildHomeListMapel(MapelList? list) {
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 20,
@@ -89,7 +131,15 @@ class _HomePageState extends State<HomePage> {
               const Spacer(),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, MapelPage.route);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return MapelPage(
+                          mapel: mapelList!
+                        );
+                      },
+                    ),
+                  );
                 },
                 child: Text(
                   "Lihat Semua",
@@ -102,9 +152,27 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
-          MapelWidget(),
-          MapelWidget(),
-          MapelWidget(),
+          list == null
+              ? Container(
+                  height: 70,
+                  width: double.infinity,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: list.data!.length > 3 ? 3 :list.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final current = list.data![index];
+                    return MapelWidget(
+                      title: current.courseName!,
+                      totalPaket: current.jumlahMateri!.toString(),
+                      totalDone: current.jumlahDone!.toString(),
+                    );
+                  },
+                ),
         ],
       ),
     );
@@ -198,7 +266,14 @@ class _HomePageState extends State<HomePage> {
 class MapelWidget extends StatelessWidget {
   const MapelWidget({
     Key? key,
+    required this.title,
+    required this.totalDone,
+    required this.totalPaket,
   }) : super(key: key);
+
+  final String title;
+  final String totalDone;
+  final String totalPaket;
 
   @override
   Widget build(BuildContext context) {
@@ -233,16 +308,16 @@ class MapelWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Matematika",
-                  style: TextStyle(
+                Text(
+                  title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                     fontSize: 12,
                   ),
                 ),
                 Text(
-                  "0/50 Paket latihan soal",
+                  "$totalDone/$totalPaket Paket latihan soal",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: R.colors.disable,

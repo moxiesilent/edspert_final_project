@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/models/mapel_list.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/home_page.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/paket_soal_page.dart';
 
 class MapelPage extends StatelessWidget {
-  const MapelPage({super.key});
+  const MapelPage({super.key, required this.mapel});
   static String route = "mapel_page";
+
+  final MapelList mapel;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +21,22 @@ class MapelPage extends StatelessWidget {
           vertical: 8.0,
           horizontal: 20,
         ),
-        child: ListView.builder(itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(PaketSoalPage.route);
-            },
-            child: MapelWidget(),
-          );
-        }),
+        child: ListView.builder(
+          itemCount: mapel.data!.length,
+          itemBuilder: (context, index) {
+            final current = mapel.data![index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(PaketSoalPage.route);
+              },
+              child: MapelWidget(
+                title: current.courseName!,
+                totalPaket: current.jumlahMateri!.toString(),
+                totalDone: current.jumlahDone!.toString(),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
