@@ -3,6 +3,7 @@ import 'package:latihan_soal_app/constants/r.dart';
 import 'package:latihan_soal_app/models/network_response.dart';
 import 'package:latihan_soal_app/models/paket_soal_list.dart';
 import 'package:latihan_soal_app/repository/latihan_soal_api%20copy.dart';
+import 'package:latihan_soal_app/view/main/latihan_soal/kerjakan_latihan_soal.dart';
 
 class PaketSoalPage extends StatefulWidget {
   const PaketSoalPage({super.key, required this.id});
@@ -75,23 +76,22 @@ class _PaketSoalPageState extends State<PaketSoalPage> {
                         paketSoalList!.data!.length,
                         (index) {
                           final current = paketSoalList!.data![index];
-                          return PaketSoalWidget(
-                              data: current);
+                          return PaketSoalWidget(data: current);
                         },
                       ).toList(),
-                    //   Wrap(
-                    //   children: List.generate(
-                    //     paketSoalList!.data!.length,
-                    //     (index) {
-                    //       final current = paketSoalList!.data![index];
-                    //       return Container(
-                    //         padding: EdgeInsets.all(3),
-                    //         width: MediaQuery.of(context).size.width * 0.4,
-                    //         child: PaketSoalWidget(data: current),
-                    //       );
-                    //     },
-                    //   ).toList(),
-                    // ),
+                      //   Wrap(
+                      //   children: List.generate(
+                      //     paketSoalList!.data!.length,
+                      //     (index) {
+                      //       final current = paketSoalList!.data![index];
+                      //       return Container(
+                      //         padding: EdgeInsets.all(3),
+                      //         width: MediaQuery.of(context).size.width * 0.4,
+                      //         child: PaketSoalWidget(data: current),
+                      //       );
+                      //     },
+                      //   ).toList(),
+                      // ),
                     ),
             ),
           ],
@@ -110,44 +110,55 @@ class PaketSoalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      padding: const EdgeInsets.all(13.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.blue.withOpacity(0.2),
-            ),
-            padding: const EdgeInsets.all(12),
-            child: Image.asset(
-              R.assets.icNote,
-              width: 14,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => KerjakanLatihanSoalPage(
+              id: data.exerciseId!,
             ),
           ),
-          const SizedBox(
-            height: 4,
-          ),
-          Text(
-            data.exerciseTitle!,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        padding: const EdgeInsets.all(13.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue.withOpacity(0.2),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: Image.asset(
+                R.assets.icNote,
+                width: 14,
+              ),
             ),
-          ),
-          Text(
-            "${data.jumlahDone}/${data.jumlahSoal} Paket Soal",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 9,
-              color: R.colors.disable,
+            const SizedBox(
+              height: 4,
             ),
-          ),
-        ],
+            Text(
+              data.exerciseTitle!,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              "${data.jumlahDone}/${data.jumlahSoal} Paket Soal",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 9,
+                color: R.colors.disable,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
