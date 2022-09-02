@@ -5,6 +5,7 @@ import 'package:latihan_soal_app/models/mapel_list.dart';
 import 'package:latihan_soal_app/models/network_response.dart';
 import 'package:latihan_soal_app/repository/latihan_soal_api%20copy.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/mapel_page.dart';
+import 'package:latihan_soal_app/view/main/latihan_soal/paket_soal_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -134,9 +135,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return MapelPage(
-                          mapel: mapelList!
-                        );
+                        return MapelPage(mapel: mapelList!);
                       },
                     ),
                   );
@@ -163,13 +162,26 @@ class _HomePageState extends State<HomePage> {
               : ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: list.data!.length > 3 ? 3 :list.data!.length,
+                  itemCount: list.data!.length > 3 ? 3 : list.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final current = list.data![index];
-                    return MapelWidget(
-                      title: current.courseName!,
-                      totalPaket: current.jumlahMateri!.toString(),
-                      totalDone: current.jumlahDone!.toString(),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return PaketSoalPage(
+                                id: current.courseId!,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: MapelWidget(
+                        title: current.courseName!,
+                        totalPaket: current.jumlahMateri!.toString(),
+                        totalDone: current.jumlahDone!.toString(),
+                      ),
                     );
                   },
                 ),
