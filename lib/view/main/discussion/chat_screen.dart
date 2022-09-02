@@ -74,8 +74,8 @@ class _ChatPageState extends State<ChatPage> {
                     itemCount: snapshot.data!.docs.reversed.length,
                     reverse: true,
                     itemBuilder: (BuildContext context, int index) {
-                      final currentChat =
-                          snapshot.data!.docs.reversed.toList()[index];
+                      final currentChat = snapshot.data!.docs.reversed
+                          .toList()[index];
                       final currentDate =
                           (currentChat['time'] as Timestamp?)?.toDate();
                       return Container(
@@ -115,12 +115,25 @@ class _ChatPageState extends State<ChatPage> {
                                       : Radius.zero,
                                 ),
                               ),
-                              child: Text(
-                                currentChat['content'],
-                                style: TextStyle(
-                                  fontSize: 13,
-                                ),
-                              ),
+                              child: currentChat['type'] == "file"
+                                  ? Image.network(
+                                      currentChat["file_url"],
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          padding: const EdgeInsets.all(10),
+                                          child: const Icon(
+                                            Icons.warning,
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Text(
+                                      currentChat['content'],
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
                             ),
                             Text(
                               currentDate == null
@@ -196,6 +209,7 @@ class _ChatPageState extends State<ChatPage> {
                                       final imgResUpload = await FirebaseStorage
                                           .instance
                                           .ref()
+                                          .child(ref)
                                           .putFile(file);
 
                                       final url = await imgResUpload.ref
