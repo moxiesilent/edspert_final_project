@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
           Navigator.push(
             context,
             MaterialPageRoute<void>(
-              builder: (BuildContext context) => const ChatPage(),
+              builder: (BuildContext context) => ChatPage(),
             ),
           );
         },
