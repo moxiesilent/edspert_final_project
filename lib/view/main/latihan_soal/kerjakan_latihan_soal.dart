@@ -11,13 +11,19 @@ class KerjakanLatihanSoalPage extends StatefulWidget {
       _KerjakanLatihanSoalPageState();
 }
 
-class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage> {
+class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
+    with SingleTickerProviderStateMixin {
   KerjakanSoalList? soalList;
+  TabController? _controller;
 
-  getKerjakanSoal() async {
+  getQuestionList() async {
     final result = await LatihanSoalApi().postQuestionList(widget.id);
     if (result.status == Status.success) {
       soalList = KerjakanSoalList.fromJson(result.data!);
+      _controller = TabController(
+        length: soalList!.data!.length,
+        vsync: this,
+      );
       setState(() {});
     }
   }
@@ -26,7 +32,7 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getKerjakanSoal();
+    getQuestionList();
   }
 
   @override
@@ -36,7 +42,17 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage> {
         title: Text("Latihan Soal"),
       ),
       //tombol selanjutnya atau submit
-      bottomNavigationBar: Container(),
+      bottomNavigationBar: Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: Text("Selanjutnya"),
+            ),
+          ],
+        ),
+      ),
       body: soalList == null
           ? const Center(
               child: CircularProgressIndicator(),
@@ -44,10 +60,51 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage> {
           : Column(
               children: [
                 //tab bar soal
-                Container(),
+                Container(
+                  child: TabBar(
+                    controller: _controller,
+                    tabs: List.generate(
+                      soalList!.data!.length,
+                      (index) => Text(
+                        "${index + 1}",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 //tab view soal dan pilihan jawaban
                 Expanded(
-                  child: Container(),
+                  child: Container(
+                    child: TabBarView(
+                      controller: _controller,
+                      children: List.generate(
+                        soalList!.data!.length,
+                        (index) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Soal no ${index + 1}",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            if (soalList!.data![index].questionTitle != null)
+                              Text(
+                                soalList!.data![index].questionTitle!,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            if (soalList!.data![index].questionTitleImg != null)
+                              Image.network(
+                                  soalList!.data![index].questionTitleImg!),
+                          ],
+                        ),
+                      ).toList(),
+                    ),
+                  ),
                 ),
               ],
             ),
