@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:latihan_soal_app/constants/r.dart';
 import 'package:latihan_soal_app/models/kerjakan_soal_list.dart';
 import 'package:latihan_soal_app/models/network_response.dart';
 import 'package:latihan_soal_app/repository/latihan_soal_api%20copy.dart';
@@ -25,6 +26,9 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
         length: soalList!.data!.length,
         vsync: this,
       );
+      _controller!.addListener(() {
+        setState(() {});
+      });
       setState(() {});
     }
   }
@@ -43,17 +47,45 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
         title: Text("Latihan Soal"),
       ),
       //tombol selanjutnya atau submit
-      bottomNavigationBar: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: () {},
-              child: Text("Selanjutnya"),
+      bottomNavigationBar: _controller == null
+          ? const SizedBox()
+          : Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: R.colors.primary,
+                      fixedSize: Size(153, 33),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () async {
+                      if (_controller!.index == soalList!.data!.length - 1) {
+                        final result = await showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return BottomSheetConfirmation();
+                          },
+                        );
+                        if (result == true) {}
+                      } else {
+                        _controller!.animateTo(_controller!.index + 1);
+                      }
+                    },
+                    child: Text(
+                      _controller?.index == soalList!.data!.length - 1
+                          ? "Kumpulin"
+                          : "Selanjutnya",
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
       body: soalList == null
           ? const Center(
               child: CircularProgressIndicator(),
@@ -151,6 +183,69 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
             Expanded(
               child: Image.network(answerImg),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomSheetConfirmation extends StatefulWidget {
+  const BottomSheetConfirmation({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<BottomSheetConfirmation> createState() =>
+      _BottomSheetConfirmationState();
+}
+
+class _BottomSheetConfirmationState extends State<BottomSheetConfirmation> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            height: 5,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: R.colors.subtitle,
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Image.asset(R.assets.imgSuccess),
+          SizedBox(
+            height: 15,
+          ),
+          Text("Kumpulkan latihan soal sekarang?"),
+          Text("Boleh langsung kumpulin dong"),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text("Nanti dulu"),
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text("Ya"),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
