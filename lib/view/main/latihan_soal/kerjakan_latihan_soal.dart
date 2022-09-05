@@ -122,41 +122,55 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
                               Text(
                                 "Soal no ${index + 1}",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: R.colors.disable,
+                                  fontSize: 12,
                                 ),
                               ),
                               if (soalList!.data![index].questionTitle != null)
                                 Html(
                                   data: soalList!.data![index].questionTitle!,
+                                  style: {
+                                    "body": Style(
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    "p": Style(
+                                      fontSize: FontSize(12),
+                                    )
+                                  },
                                 ),
                               if (soalList!.data![index].questionTitleImg !=
                                   null)
                                 Image.network(
                                     soalList!.data![index].questionTitleImg!),
                               _buildOption(
-                                "A. ",
+                                "A",
                                 soalList!.data![index].optionA,
                                 soalList!.data![index].optionAImg,
+                                index,
                               ),
                               _buildOption(
-                                "B. ",
+                                "B",
                                 soalList!.data![index].optionB,
                                 soalList!.data![index].optionBImg,
+                                index,
                               ),
                               _buildOption(
-                                "C. ",
+                                "C",
                                 soalList!.data![index].optionC,
                                 soalList!.data![index].optionCImg,
+                                index,
                               ),
                               _buildOption(
-                                "D. ",
+                                "D",
                                 soalList!.data![index].optionD,
                                 soalList!.data![index].optionDImg,
+                                index,
                               ),
                               _buildOption(
-                                "E. ",
+                                "E",
                                 soalList!.data![index].optionE,
                                 soalList!.data![index].optionEImg,
+                                index,
                               ),
                             ],
                           ),
@@ -170,20 +184,58 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
     );
   }
 
-  Container _buildOption(String option, String? answer, String? answerImg) {
-    return Container(
-      child: Row(
-        children: [
-          Text(option),
-          if (answer != null)
-            Expanded(
-              child: Html(data: answer),
+  Widget _buildOption(
+    String option,
+    String? answer,
+    String? answerImg,
+    int index,
+  ) {
+    final answerCheck = soalList!.data![index].studentAnswer == option;
+    return GestureDetector(
+      onTap: () {
+        soalList!.data![index].studentAnswer = option;
+        setState(() {});
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        margin: EdgeInsets.symmetric(
+          vertical: 2,
+        ),
+        decoration: BoxDecoration(
+          color: answerCheck ? R.colors.primary : Colors.white,
+          border: Border.all(
+            width: 1,
+            color: R.colors.disable,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Text(
+              option + ".",
+              style: TextStyle(
+                color: answerCheck ? Colors.white : Colors.black,
+              ),
             ),
-          if (answerImg != null)
-            Expanded(
-              child: Image.network(answerImg),
-            ),
-        ],
+            if (answer != null)
+              Expanded(
+                child: Html(
+                  data: answer,
+                  style: {
+                    "p": Style(
+                      color: answerCheck ? Colors.white : Colors.black,
+                    )
+                  },
+                ),
+              ),
+            if (answerImg != null)
+              Expanded(
+                child: Image.network(answerImg),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -211,7 +263,7 @@ class _BottomSheetConfirmationState extends State<BottomSheetConfirmation> {
             height: 5,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: R.colors.subtitle,
+              color: R.colors.borderGrey,
             ),
           ),
           SizedBox(
