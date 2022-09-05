@@ -5,6 +5,7 @@ import 'package:latihan_soal_app/constants/r.dart';
 import 'package:latihan_soal_app/helpers/preference_helper.dart';
 import 'package:latihan_soal_app/models/user_by_email.dart';
 import 'package:latihan_soal_app/view/login_page.dart';
+import 'package:latihan_soal_app/view/main/profile/edit_profile__page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -36,12 +37,11 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text("Akun Saya"),
         actions: [
           TextButton(
-            onPressed: () async {
-              await GoogleSignIn().signOut();
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                LoginPage.route,
-                (route) => false,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (BuildContext context){
+                  return EditProfilePage();
+                })
               );
             },
             child: Text(
