@@ -1,9 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:latihan_soal_app/constants/r.dart';
+import 'package:latihan_soal_app/helpers/preference_helper.dart';
 import 'package:latihan_soal_app/models/banner_list.dart';
 import 'package:latihan_soal_app/models/mapel_list.dart';
 import 'package:latihan_soal_app/models/network_response.dart';
+import 'package:latihan_soal_app/models/user_by_email.dart';
 import 'package:latihan_soal_app/repository/latihan_soal_api%20copy.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/mapel_page.dart';
 import 'package:latihan_soal_app/view/main/latihan_soal/paket_soal_page.dart';
@@ -35,8 +37,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  setupFcm() async {
+  UserData? dataUser;
 
+  Future getUserData() async {
+    dataUser = await PreferenceHelper().getUserData();
+    setState(() {});
+  }
+
+  setupFcm() async {
     final tokenFcm = await FirebaseMessaging.instance.getToken();
     print("token fcm: $tokenFcm");
     // FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -67,6 +75,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getMapel();
     getBanner();
+    getUserData();
   }
 
   @override
@@ -274,15 +283,15 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "Hi, Nama user",
-                  style: TextStyle(
+                  "Hi, ${dataUser?.userName ?? "Nama user"}",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                   ),
                 ),
-                Text(
+                const Text(
                   "Selamat Datang",
                   style: TextStyle(
                     fontWeight: FontWeight.w400,

@@ -75,6 +75,7 @@ class _MainPageState extends State<MainPage> {
                           duration: Duration(milliseconds: 500),
                           curve: Curves.easeInOut,
                         );
+                        setState(() {});
                       },
                       child: Column(
                         children: [

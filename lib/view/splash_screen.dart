@@ -34,8 +34,11 @@ class _SplashScreenState extends State<SplashScreen> {
           final data = UsersByEmail.fromJson(dataUser.data!);
           if (data.status == 1) {
             Navigator.of(context).pushNamed(MainPage.route);
+            //menggunakan push replacement named terdapat error ketika loading banner
+            // Navigator.of(context).pushReplacementNamed(MainPage.route);
           } else {
             Navigator.of(context).pushNamed(RegisterPage.route);
+            // Navigator.of(context).pushReplacementNamed(RegisterPage.route);
           }
         }
       } else {
