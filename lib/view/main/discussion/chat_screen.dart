@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -74,8 +75,8 @@ class _ChatPageState extends State<ChatPage> {
                     itemCount: snapshot.data!.docs.reversed.length,
                     reverse: true,
                     itemBuilder: (BuildContext context, int index) {
-                      final currentChat = snapshot.data!.docs.reversed
-                          .toList()[index];
+                      final currentChat =
+                          snapshot.data!.docs.reversed.toList()[index];
                       final currentDate =
                           (currentChat['time'] as Timestamp?)?.toDate();
                       return Container(
@@ -95,45 +96,88 @@ class _ChatPageState extends State<ChatPage> {
                                 color: Color(0xff5200ff),
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: user.uid == currentChat['uid']
-                                    ? Colors.white
-                                    : Colors.blue.withOpacity(0.2),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: user.uid == currentChat['uid']
-                                      ? Radius.zero
-                                      : Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                  topLeft: user.uid == currentChat['uid']
-                                      ? Radius.circular(10)
-                                      : Radius.zero,
-                                ),
-                              ),
-                              child: currentChat['type'] == "file"
-                                  ? Image.network(
-                                      currentChat["file_url"],
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: const Icon(
-                                            Icons.warning,
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Text(
-                                      currentChat['content'],
-                                      style: const TextStyle(
-                                        fontSize: 13,
+                            GestureDetector(
+                              onLongPress: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Container(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              title: Text("Salin"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                FlutterClipboard.copy(
+                                                        currentChat["content"])
+                                                    .then(
+                                                  (value) =>
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        "Text telah disalin",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            if (user.uid == currentChat['uid'])
+                                              ListTile(
+                                                title: Text("Hapus"),
+                                                onTap: (){},
+                                              ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: user.uid == currentChat['uid']
+                                      ? Colors.white
+                                      : Colors.blue.withOpacity(0.2),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    bottomRight: user.uid == currentChat['uid']
+                                        ? Radius.zero
+                                        : Radius.circular(10),
+                                    topRight: Radius.circular(10),
+                                    topLeft: user.uid == currentChat['uid']
+                                        ? Radius.circular(10)
+                                        : Radius.zero,
+                                  ),
+                                ),
+                                child: currentChat['type'] == "file"
+                                    ? Image.network(
+                                        currentChat["file_url"],
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(10),
+                                            child: const Icon(
+                                              Icons.warning,
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Text(
+                                        currentChat['content'],
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                              ),
                             ),
                             Text(
                               currentDate == null
@@ -224,6 +268,7 @@ class _ChatPageState extends State<ChatPage> {
                                         "type": "file",
                                         "file_url": url,
                                         "time": FieldValue.serverTimestamp(),
+                                        "is_deleted": false,
                                       };
                                       chat.add(chatContent).whenComplete(
                                           () => textController.clear());
@@ -258,6 +303,7 @@ class _ChatPageState extends State<ChatPage> {
                           "type": "text",
                           "file_url": null,
                           "time": FieldValue.serverTimestamp(),
+                          "is_deleted": false,
                         };
                         chat
                             .add(chatContent)
