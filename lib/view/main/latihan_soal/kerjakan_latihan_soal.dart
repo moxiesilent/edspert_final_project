@@ -84,9 +84,10 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
                           final payload = {
                             "user_email": UserEmail.getUserEmail(),
                             "exercise_id": widget.id,
-                            "bank_question_id": "",
-                            "student_answer": "",
+                            "bank_question_id": questionId,
+                            "student_answer": answer,
                           };
+                          print(payload);
 
                           final result =
                               await LatihanSoalApi().postStudentAnswer(payload);
@@ -94,7 +95,7 @@ class _KerjakanLatihanSoalPageState extends State<KerjakanLatihanSoalPage>
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) {
-                                  return ResultPage();
+                                  return ResultPage(exerciseId: widget.id,);
                                 },
                               ),
                             );
