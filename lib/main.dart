@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latihan_soal_app/constants/r.dart';
 import 'package:latihan_soal_app/view/login_page.dart';
-import 'package:latihan_soal_app/view/main/latihan_soal/mapel_page.dart';
-import 'package:latihan_soal_app/view/main/latihan_soal/paket_soal_page.dart';
 import 'package:latihan_soal_app/view/main_page.dart';
 import 'package:latihan_soal_app/view/register_page.dart';
 import 'package:latihan_soal_app/view/splash_screen.dart';

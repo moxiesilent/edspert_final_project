@@ -51,7 +51,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       backgroundColor: R.colors.grey,
       appBar: AppBar(
-        title: Text("Diskusi Soal"),
+        title: const Text("Diskusi Soal"),
       ),
       body: Column(
         children: [
@@ -67,8 +67,8 @@ class _ChatPageState extends State<ChatPage> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                    return const Center(
+                      child: const CircularProgressIndicator(),
                     );
                   }
                   return ListView.builder(
@@ -91,9 +91,9 @@ class _ChatPageState extends State<ChatPage> {
                           children: [
                             Text(
                               currentChat['nama'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10,
-                                color: Color(0xff5200ff),
+                                color: const Color(0xff5200ff),
                               ),
                             ),
                             GestureDetector(
@@ -107,7 +107,7 @@ class _ChatPageState extends State<ChatPage> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             ListTile(
-                                              title: Text("Salin"),
+                                              title: const Text("Salin"),
                                               onTap: () {
                                                 Navigator.pop(context);
                                                 FlutterClipboard.copy(
@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
-                                                    SnackBar(
+                                                    const SnackBar(
                                                       content: Text(
                                                         "Text telah disalin",
                                                       ),
@@ -128,8 +128,23 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                             if (user.uid == currentChat['uid'])
                                               ListTile(
-                                                title: Text("Hapus"),
-                                                onTap: (){},
+                                                title: const Text("Hapus"),
+                                                onTap: () {
+                                                  String id = currentChat.id;
+                                                  chat.doc(id).delete().then(
+                                                        (value) =>
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                          const SnackBar(
+                                                            content: Text(
+                                                              "Text telah dihapus",
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                  Navigator.pop(context);
+                                                },
                                               ),
                                           ],
                                         ),
@@ -148,13 +163,13 @@ class _ChatPageState extends State<ChatPage> {
                                       ? Colors.white
                                       : Colors.blue.withOpacity(0.2),
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
+                                    bottomLeft: const Radius.circular(10),
                                     bottomRight: user.uid == currentChat['uid']
                                         ? Radius.zero
-                                        : Radius.circular(10),
-                                    topRight: Radius.circular(10),
+                                        : const Radius.circular(10),
+                                    topRight: const Radius.circular(10),
                                     topLeft: user.uid == currentChat['uid']
-                                        ? Radius.circular(10)
+                                        ? const Radius.circular(10)
                                         : Radius.zero,
                                   ),
                                 ),
@@ -203,7 +218,7 @@ class _ChatPageState extends State<ChatPage> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, -1),
+                    offset: const Offset(0, -1),
                     blurRadius: 10,
                     color: Colors.black.withOpacity(0.25),
                   ),
@@ -220,7 +235,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         vertical: 4,
                       ),
                       child: Row(

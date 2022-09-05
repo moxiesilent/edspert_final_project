@@ -8,11 +8,11 @@ class LatihanSoalSkor {
   LatihanSoalSkor.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
@@ -30,14 +30,14 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     exercise = json['exercise'] != null
-        ? new Exercise.fromJson(json['exercise'])
+        ? Exercise.fromJson(json['exercise'])
         : null;
     result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.exercise != null) {
       data['exercise'] = this.exercise!.toJson();
     }
@@ -116,7 +116,7 @@ class Exercise {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['exercise_id'] = this.exerciseId;
     data['exercise_code'] = this.exerciseCode;
     data['file_course'] = this.fileCourse;
@@ -158,7 +158,7 @@ class Result {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['jumlah_benar'] = this.jumlahBenar;
     data['jumlah_salah'] = this.jumlahSalah;
     data['jumlah_tidak'] = this.jumlahTidak;

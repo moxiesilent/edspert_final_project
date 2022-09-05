@@ -11,15 +11,15 @@ class KerjakanSoalList {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -80,22 +80,22 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['exercise_id_fk'] = this.exerciseIdFk;
-    data['bank_question_id'] = this.bankQuestionId;
-    data['question_title'] = this.questionTitle;
-    data['question_title_img'] = this.questionTitleImg;
-    data['option_a'] = this.optionA;
-    data['option_a_img'] = this.optionAImg;
-    data['option_b'] = this.optionB;
-    data['option_b_img'] = this.optionBImg;
-    data['option_c'] = this.optionC;
-    data['option_c_img'] = this.optionCImg;
-    data['option_d'] = this.optionD;
-    data['option_d_img'] = this.optionDImg;
-    data['option_e'] = this.optionE;
-    data['option_e_img'] = this.optionEImg;
-    data['student_answer'] = this.studentAnswer;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['exercise_id_fk'] = exerciseIdFk;
+    data['bank_question_id'] = bankQuestionId;
+    data['question_title'] = questionTitle;
+    data['question_title_img'] = questionTitleImg;
+    data['option_a'] = optionA;
+    data['option_a_img'] = optionAImg;
+    data['option_b'] = optionB;
+    data['option_b_img'] = optionBImg;
+    data['option_c'] = optionC;
+    data['option_c_img'] = optionCImg;
+    data['option_d'] = optionD;
+    data['option_d_img'] = optionDImg;
+    data['option_e'] = optionE;
+    data['option_e_img'] = optionEImg;
+    data['student_answer'] = studentAnswer;
     return data;
   }
 }
