@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -139,30 +141,31 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            ButtonLogin(
-              onTap: () async {
-                Navigator.of(context).pushNamed(RegisterPage.route);
-              },
-              backgroundColor: Colors.black,
-              borderColor: R.colors.primary,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(R.assets.icApple),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    R.strings.loginWithApple,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+            if (Platform.isIOS)
+              ButtonLogin(
+                onTap: () async {
+                  Navigator.of(context).pushNamed(RegisterPage.route);
+                },
+                backgroundColor: Colors.black,
+                borderColor: R.colors.primary,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(R.assets.icApple),
+                    const SizedBox(
+                      width: 15,
                     ),
-                  ),
-                ],
+                    Text(
+                      R.strings.loginWithApple,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -199,7 +202,7 @@ class ButtonLogin extends StatelessWidget {
           elevation: 0,
           fixedSize: Size(MediaQuery.of(context).size.width * 0.8, 50),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular( radius ?? 25),
+            borderRadius: BorderRadius.circular(radius ?? 25),
             side: BorderSide(
               color: borderColor,
             ),
