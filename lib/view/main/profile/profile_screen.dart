@@ -37,12 +37,15 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text("Akun Saya"),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
                 MaterialPageRoute(builder: (BuildContext context){
                   return EditProfilePage();
                 })
               );
+              if(result == true){
+                getUser();
+              }
             },
             child: Text(
               "Edit",

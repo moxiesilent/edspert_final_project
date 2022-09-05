@@ -87,13 +87,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 "foto": UserEmail.getUserPhotoUrl(),
               };
 
-              final result = await AuthApi().postRegister(json);
+              final result = await AuthApi().postUpdateUser(json);
               if (result.status == Status.success) {
                 final registerResult = UsersByEmail.fromJson(result.data!);
                 if (registerResult.status == 1) {
                   await PreferenceHelper().setUserData(registerResult.data!);
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      MainPage.route, (context) => false);
+                  Navigator.pop(context, true);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
